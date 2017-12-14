@@ -46,7 +46,7 @@ public:
   //
   // Update:
   //
-  //   potential update this evaluator, and return whether this
+  //   potentially update this evaluator, and return whether this
   //   evaluator's data has changed since the last time Update() was
   //   called by this requestor.
   // -------------------------------------------------------------------------------

@@ -24,7 +24,7 @@
 // This function is called exactly once on each task.
 //
 // compute() should take whatever arguments (parameters, future lists,
-// etc) needed to bundle and spaw the task.  This is called each time
+// etc) needed to bundle and spawn the task.  This is called each time
 // a task is passed off to the runtime queue.
 //
 // cpu_task() should be the actual task implementation, which unpacks
@@ -140,7 +140,7 @@ TaskManagerSecondary<Return_t,Func_t,Args...>
   assert(std::tuple_size<std::tuple<Args...> >::value == task->futures.size());
   const Func_t& func= *(const Func_t*)(task->args);
   auto values = futureToValue<Args...>(task->futures.begin());
-  std::cout << "got a task wiht " << task->futures.size() << " elems" << std::endl;
+  std::cout << "got a task with " << task->futures.size() << " elems" << std::endl;
 
   return Arcos::Magic::invoke<Return_t>(func,values);
 }

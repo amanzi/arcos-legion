@@ -28,17 +28,16 @@ USE_HDF         ?= 0		# Include HDF5 support (requires HDF5)
 ALT_MAPPERS     ?= 0		# Include alternative mappers (not recommended)
 
 # Put the binary file name here
-OUTFILE		?= a.out
+OUTFILE		?= domains
 # List all the application source files here
-GEN_SRC		?= state.cc evaluator_factory.cc main.cc	# .cc files
+GEN_SRC		?= domains.cc	# .cc files
 
 # You can modify these variables, some will be appended to by the runtime makefile
 INC_FLAGS	?=
-CC_FLAGS	?= -std=c++11 -DLEGION_SPY
+CC_FLAGS	?= -std=c++11
 NVCC_FLAGS	?=
 GASNET_FLAGS	?=
 LD_FLAGS	?=
-
 
 ###########################################################################
 #
@@ -47,8 +46,4 @@ LD_FLAGS	?=
 ###########################################################################
 
 include $(LG_RT_DIR)/runtime.mk
-
-
-localclean:
-	rm -f ./*.o a.out
 

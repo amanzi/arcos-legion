@@ -24,7 +24,7 @@
 // This function is called exactly once on each task.
 //
 // compute() should take whatever arguments (parameters, future lists,
-// etc) needed to bundle and spaw the task.  This is called each time
+// etc) needed to bundle and spawn the task.  This is called each time
 // a task is passed off to the runtime queue.
 //
 // cpu_task() should be the actual task implementation, which unpacks
@@ -36,6 +36,7 @@
 
 #ifndef ARCOS_TASK_MANAGERS_HH_
 #define ARCOS_TASK_MANAGERS_HH_
+
 #include "legion.h"
 #include "functions.hh"
 #include "template_magic.hh"

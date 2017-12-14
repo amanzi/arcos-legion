@@ -44,6 +44,7 @@ EvaluatorPrimary<TaskManager_t>::ProvidesKey(const Key& key) const {
 template<typename TaskManager_t>
 bool
 EvaluatorPrimary<TaskManager_t>::Update(State& S, const Key& request) {
+  std::cout << "Calling Primary::Update() on " << key_ << "..." << std::endl;
   if (!done_once_) {
     Update_(S);
     done_once_ = true;
@@ -84,6 +85,7 @@ EvaluatorSecondary<TaskManager_t,Function_t>::ProvidesKey(const Key& key) const 
 template<typename TaskManager_t, typename Function_t>
 bool
 EvaluatorSecondary<TaskManager_t,Function_t>::Update(State& S, const Key& request) {
+  std::cout << "Calling Secondary::Update() on " << key_ << "..." << std::endl;
   bool update = false;
 
   for (auto dep : dependencies_)
