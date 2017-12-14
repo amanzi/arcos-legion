@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 //#define STRING_HOLDER(VAR) struct VAR { static const char* asString() { return #VAR; } } 
 
@@ -39,6 +40,10 @@ void top_level_task(const Task *task,
   s.evaluators["A"]->Update(s, "main");
 
   s.report(); // correct?
+
+  // check the answer
+  assert(std::abs(s.futures["A"].get_result<double>() - 6484.0) < 1.e-10);
+  std::cout << "Test passed!" << std::endl;
 }
   
 
