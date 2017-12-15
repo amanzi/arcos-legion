@@ -44,4 +44,16 @@ This requires permissions to be mapped out, and allocators/launchers/index sets.
 
 ## 4. state on regions
 
+This is test 02_state_on_doubles, but now uses Regions.  THIS
+CURRENTLY FAILS...  because Legion's TaskLauncher::add_field() is not
+ordered, so we cannot infer the order of the arguments from the order
+of the region requirement's fields.  I need some advice on this, but
+will first keep charging forward to get to index'ed launches, as these
+are where I need to get anyway, and TaskLauncher is NOT an
+IndexTaskLauncher.
+
+## 5. regions via indexed launch
+
+This is test 01_futures, on Regions, using indexed launches.  For now,
+think of partitioned data, where each element is its own partition.
 
