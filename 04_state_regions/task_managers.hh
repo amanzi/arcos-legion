@@ -9,12 +9,12 @@
 // in pushing tasks onto the Legion runtime.  All TaskManagers must supply:
 //
 // struct TaskManager {
-//   static LHL::TaskID taskid;
-//   static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-//   static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime, ...);
-//   static double cpu_task(const LHL::Task *task,
-// 		        const std::vector<LHL::PhysicalRegion> &regions,
-// 		        LHL::Context ctx, LHL::Runtime *runtime);
+//   static Legion::TaskID taskid;
+//   static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+//   static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime, ...);
+//   static double cpu_task(const Legion::Task *task,
+// 		        const std::vector<Legion::PhysicalRegion> &regions,
+// 		        Legion::Context ctx, Legion::Runtime *runtime);
 // };
 //
 //
@@ -50,15 +50,15 @@ namespace Arcos {
 // =============================================================================
 template<typename Data_t>
 struct TaskManagerPrimary {
-  static LHL::TaskID taskid;
-  static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-  static LHL::Future compute(LHL::Context ctx,
-                             LHL::Runtime *runtime,
+  static Legion::TaskID taskid;
+  static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+  static Legion::Future compute(Legion::Context ctx,
+                             Legion::Runtime *runtime,
                              const Legion::TaskLauncher& launcher,
                              const Data_t& value);
-  static void cpu_task(const LHL::Task *task,
-			   const std::vector<LHL::PhysicalRegion> &regions,
-			   LHL::Context ctx, LHL::Runtime *runtime);
+  static void cpu_task(const Legion::Task *task,
+			   const std::vector<Legion::PhysicalRegion> &regions,
+			   Legion::Context ctx, Legion::Runtime *runtime);
 };
 
 
@@ -67,14 +67,14 @@ struct TaskManagerPrimary {
 // =============================================================================
 template<typename Func_t, typename... Args>
 struct TaskManagerSecondary {
-  static LHL::TaskID taskid;
-  static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-  static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime,
+  static Legion::TaskID taskid;
+  static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+  static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime,
                              const Legion::TaskLauncher& launcher,
 			     const Func_t& func);
-  static void cpu_task(const LHL::Task *task,
-                       const std::vector<LHL::PhysicalRegion> &regions,
-                       LHL::Context ctx, LHL::Runtime *runtime);
+  static void cpu_task(const Legion::Task *task,
+                       const std::vector<Legion::PhysicalRegion> &regions,
+                       Legion::Context ctx, Legion::Runtime *runtime);
 };
 
 

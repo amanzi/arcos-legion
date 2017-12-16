@@ -63,8 +63,8 @@ template<typename TaskManager_t>
 void
 EvaluatorPrimary<TaskManager_t>::Update_(State& S) {
   std::cout << "Launching Primary task for " << key_ << std::endl;
-  TaskLauncher launcher(TaskManager_t::taskid, TaskArgument(&value_, sizeof(value_)));
-  launcher.add_region_requirement(RegionRequirement(S.logical_region, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
+  Legion::TaskLauncher launcher(TaskManager_t::taskid, Legion::TaskArgument(&value_, sizeof(value_)));
+  launcher.add_region_requirement(Legion::RegionRequirement(S.logical_region, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
   launcher.add_field(0, S.field_ids[key_]);  
   S.futures[key_] = TaskManager_t::compute(S.ctx, S.runtime, launcher, value_);
 }
@@ -113,10 +113,10 @@ void
 EvaluatorSecondary<TaskManager_t,Function_t>::Update_(State& S) {
   std::cout << "Launching Secondary task for " << key_ << std::endl;
 
-  TaskLauncher launcher(TaskManager_t::taskid, TaskArgument(NULL, 0));
-  launcher.add_region_requirement(RegionRequirement(S.logical_region, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
+  Legion::TaskLauncher launcher(TaskManager_t::taskid, Legion::TaskArgument(NULL, 0));
+  launcher.add_region_requirement(Legion::RegionRequirement(S.logical_region, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
   launcher.add_field(0, S.field_ids[key_]);
-  auto rr = RegionRequirement{S.logical_region, READ_ONLY, EXCLUSIVE, S.logical_region};
+  auto rr = Legion::RegionRequirement{S.logical_region, READ_ONLY, EXCLUSIVE, S.logical_region};
   std::vector<Legion::FieldID> rr_deps;
   for (auto dep : dependencies_) rr_deps.push_back(S.field_ids[dep]);
   rr.add_fields(rr_deps);
@@ -126,7 +126,7 @@ EvaluatorSecondary<TaskManager_t,Function_t>::Update_(State& S) {
   //   launcher.add_field(1, S.field_ids[dep]);
   // }
   
-  Future f = TaskManager_t::compute(S.ctx, S.runtime, launcher, func_);
+  Legion::Future f = TaskManager_t::compute(S.ctx, S.runtime, launcher, func_);
   S.futures[key_] = f;
 }
 

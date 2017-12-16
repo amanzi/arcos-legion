@@ -15,8 +15,6 @@
 
 #include "legion.h"
 
-using namespace LegionRuntime::HighLevel;
-
 namespace Arcos {
 
 static const int g_ncells = 4;
@@ -24,23 +22,23 @@ static const int g_ncells = 4;
 class Evaluator;
 
 struct State {
-  State(Context ctx_, Runtime *runtime_)
+  State(Legion::Context ctx_, Legion::Runtime *runtime_)
     : ctx(ctx_),
       runtime(runtime_),
-      domain(DomainPoint(0), DomainPoint(g_ncells-1)),
+      domain(Legion::DomainPoint(0), Legion::DomainPoint(g_ncells-1)),
       n_fids(0)
   {}
 
   ~State();
   
-  Context ctx;
-  Runtime *runtime;
-  Domain domain;
-  LogicalRegion logical_region;
-  PhysicalRegion physical_region;
+  Legion::Context ctx;
+  Legion::Runtime *runtime;
+  Legion::Domain domain;
+  Legion::LogicalRegion logical_region;
+  Legion::PhysicalRegion physical_region;
   
-  std::map<std::string,Future> futures;
-  std::map<std::string,FieldID> field_ids;
+  std::map<std::string,Legion::Future> futures;
+  std::map<std::string,Legion::FieldID> field_ids;
   std::map<std::string,std::unique_ptr<Evaluator> > evaluators;
 
   void report();

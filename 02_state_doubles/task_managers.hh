@@ -9,12 +9,12 @@
 // in pushing tasks onto the Legion runtime.  All TaskManagers must supply:
 //
 // struct TaskManager {
-//   static LHL::TaskID taskid;
-//   static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-//   static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime, ...);
-//   static double cpu_task(const LHL::Task *task,
-// 		        const std::vector<LHL::PhysicalRegion> &regions,
-// 		        LHL::Context ctx, LHL::Runtime *runtime);
+//   static Legion::TaskID taskid;
+//   static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+//   static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime, ...);
+//   static double cpu_task(const Legion::Task *task,
+// 		        const std::vector<Legion::PhysicalRegion> &regions,
+// 		        Legion::Context ctx, Legion::Runtime *runtime);
 // };
 //
 //
@@ -51,12 +51,12 @@ namespace Arcos {
 // =============================================================================
 template<typename Return_t>
 struct TaskManagerPrimary {
-  static LHL::TaskID taskid;
-  static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-  static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime, const Return_t& value);
-  static Return_t cpu_task(const LHL::Task *task,
-			   const std::vector<LHL::PhysicalRegion> &regions,
-			   LHL::Context ctx, LHL::Runtime *runtime);
+  static Legion::TaskID taskid;
+  static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+  static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime, const Return_t& value);
+  static Return_t cpu_task(const Legion::Task *task,
+			   const std::vector<Legion::PhysicalRegion> &regions,
+			   Legion::Context ctx, Legion::Runtime *runtime);
 };
 
 
@@ -65,14 +65,14 @@ struct TaskManagerPrimary {
 // =============================================================================
 template<typename Return_t, typename Func_t, typename... Args>
 struct TaskManagerSecondary {
-  static LHL::TaskID taskid;
-  static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-  static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime,
-			     const std::vector<LHL::Future>& futures,
+  static Legion::TaskID taskid;
+  static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+  static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime,
+			     const std::vector<Legion::Future>& futures,
 			     const Func_t& func);
-  static Return_t cpu_task(const LHL::Task *task,
-			   const std::vector<LHL::PhysicalRegion> &regions,
-			   LHL::Context ctx, LHL::Runtime *runtime);
+  static Return_t cpu_task(const Legion::Task *task,
+			   const std::vector<Legion::PhysicalRegion> &regions,
+			   Legion::Context ctx, Legion::Runtime *runtime);
 };
 
 

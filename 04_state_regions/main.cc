@@ -12,7 +12,7 @@
 #include "UniqueHelpers.hh"
 
 
-using namespace LegionRuntime::HighLevel;
+using namespace Legion;
 using namespace Arcos;
 
 enum TaskIDList {

@@ -20,11 +20,6 @@ void
 State::report() {
   std::cout << "State Report:" << std::endl
 	    << "-------------" << std::endl;
-  for (auto& kf : futures) {
-    double result = kf.second.get_result<double>();
-    std::cout << "  " << kf.first << " = " << result << std::endl;
-  }
-  std:: cout << "-------------" << std::endl;
 }
 
 void
@@ -46,14 +41,14 @@ void
 State::Setup() {
   // create the logical region to hold all data
   // -- create the index space
-  IndexSpace untyped_is = runtime->create_index_space(ctx, domain);
+  Legion::IndexSpace untyped_is = runtime->create_index_space(ctx, domain);
   printf("State Setup:\n  Created untyped index space %x\n", untyped_is.get_id());
 
   // -- create the field space
-  FieldSpace fs = runtime->create_field_space(ctx);
+  Legion::FieldSpace fs = runtime->create_field_space(ctx);
   printf("  Created field space field space %x\n", fs.get_id());
   {
-    FieldAllocator allocator = runtime->create_field_allocator(ctx, fs);
+    Legion::FieldAllocator allocator = runtime->create_field_allocator(ctx, fs);
     for (auto fid : field_ids) {
       allocator.allocate_field(sizeof(double), fid.second);
     }
@@ -68,9 +63,9 @@ State::Setup() {
   
   // Now make the physical region: need region requirements.  Since this is
   // main, most permissive?
-  RegionRequirement req(logical_region, READ_WRITE, EXCLUSIVE, logical_region);
+  Legion::RegionRequirement req(logical_region, READ_WRITE, EXCLUSIVE, logical_region);
   for (auto fid : field_ids) req.add_field(fid.second);
-  InlineLauncher region_launcher(req);
+  Legion::InlineLauncher region_launcher(req);
 
   // make the physical region
   printf("  Mapping to a physical region\n");

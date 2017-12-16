@@ -109,11 +109,11 @@ template<typename TaskManager_t, typename Function_t>
 void
 EvaluatorSecondary<TaskManager_t,Function_t>::Update_(State& S) {
   std::cout << "Queuing Secondary task for " << key_ << std::endl;
-  std::vector<Future> futures;
+  std::vector<Legion::Future> futures;
   for (auto dep : dependencies_) {
     futures.emplace_back(S.futures[dep]);
   }
-  Future f = TaskManager_t::compute(S.ctx, S.runtime, futures, func_);
+  Legion::Future f = TaskManager_t::compute(S.ctx, S.runtime, futures, func_);
   S.futures[key_] = f;
 }
 

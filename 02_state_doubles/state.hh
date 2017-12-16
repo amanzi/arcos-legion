@@ -16,20 +16,18 @@
 #include "legion.h"
 #include "evaluators.hh"
 
-using namespace LegionRuntime::HighLevel;
-
 namespace Arcos {
 
 class Evaluator;
 
 struct State {
-  State(Context ctx_, Runtime *runtime_)
+  State(Legion::Context ctx_, Legion::Runtime *runtime_)
     : ctx(ctx_),
       runtime(runtime_) {}
 
-  Context ctx;
-  Runtime *runtime;
-  std::map<std::string,Future> futures;
+  Legion::Context ctx;
+  Legion::Runtime *runtime;
+  std::map<std::string,Legion::Future> futures;
   std::map<std::string,std::unique_ptr<Evaluator> > evaluators;
 
   void report();

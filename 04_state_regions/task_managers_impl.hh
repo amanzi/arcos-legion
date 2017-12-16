@@ -9,12 +9,12 @@
 // in pushing tasks onto the Legion runtime.  All TaskManagers must supply:
 //
 // struct TaskManager {
-//   static LHL::TaskID taskid;
-//   static void preregister_task(LHL::TaskID new_taskid = AUTO_GENERATE_ID);
-//   static LHL::Future compute(LHL::Context ctx, LHL::Runtime *runtime, ...);
-//   static double cpu_task(const LHL::Task *task,
-// 		        const std::vector<LHL::PhysicalRegion> &regions,
-// 		        LHL::Context ctx, LHL::Runtime *runtime);
+//   static Legion::TaskID taskid;
+//   static void preregister_task(Legion::TaskID new_taskid = AUTO_GENERATE_ID);
+//   static Legion::Future compute(Legion::Context ctx, Legion::Runtime *runtime, ...);
+//   static double cpu_task(const Legion::Task *task,
+// 		        const std::vector<Legion::PhysicalRegion> &regions,
+// 		        Legion::Context ctx, Legion::Runtime *runtime);
 // };
 //
 //
@@ -41,22 +41,22 @@ namespace Arcos {
 // ------------------------------------------------------------------
 template<typename Data_t>
 void
-TaskManagerPrimary<Data_t>::preregister_task(LHL::TaskID new_taskid)
+TaskManagerPrimary<Data_t>::preregister_task(Legion::TaskID new_taskid)
 {
   taskid = ((new_taskid == AUTO_GENERATE_ID) ?
-	    LHL::Runtime::generate_static_task_id() :
+	    Legion::Runtime::generate_static_task_id() :
 	      new_taskid);
-  LHL::TaskVariantRegistrar tvr(taskid, "primary_variable");
+  Legion::TaskVariantRegistrar tvr(taskid, "primary_variable");
   //  std::cout << "Registering task: primary_variable" << std::endl;
-  tvr.add_constraint(LHL::ProcessorConstraint(LHL::Processor::LOC_PROC));
+  tvr.add_constraint(Legion::ProcessorConstraint(Legion::Processor::LOC_PROC));
   tvr.set_leaf(true);
-  LHL::Runtime::preregister_task_variant<&TaskManagerPrimary<Data_t>::cpu_task>(tvr, "primary_variable");
+  Legion::Runtime::preregister_task_variant<&TaskManagerPrimary<Data_t>::cpu_task>(tvr, "primary_variable");
 }
 
 
 template<typename Data_t>
-LHL::Future
-TaskManagerPrimary<Data_t>::compute(LHL::Context ctx, LHL::Runtime *runtime,
+Legion::Future
+TaskManagerPrimary<Data_t>::compute(Legion::Context ctx, Legion::Runtime *runtime,
         const Legion::TaskLauncher& launcher, const Data_t& value)
 {
   return runtime->execute_task(ctx, launcher);
@@ -65,9 +65,9 @@ TaskManagerPrimary<Data_t>::compute(LHL::Context ctx, LHL::Runtime *runtime,
 
 template<typename Data_t>
 void
-TaskManagerPrimary<Data_t>::cpu_task(const LHL::Task *task,
-				       const std::vector<LHL::PhysicalRegion> &regions,
-				       LHL::Context ctx, LHL::Runtime *runtime)
+TaskManagerPrimary<Data_t>::cpu_task(const Legion::Task *task,
+				       const std::vector<Legion::PhysicalRegion> &regions,
+				       Legion::Context ctx, Legion::Runtime *runtime)
 {
   std::cout << "Executing primary task...";
   assert(regions.size() == 1);
@@ -86,7 +86,7 @@ TaskManagerPrimary<Data_t>::cpu_task(const LHL::Task *task,
 }
 
 template<typename Data_t>
-LHL::TaskID TaskManagerPrimary<Data_t>::taskid = 0;
+Legion::TaskID TaskManagerPrimary<Data_t>::taskid = 0;
 
 
 
@@ -98,23 +98,23 @@ LHL::TaskID TaskManagerPrimary<Data_t>::taskid = 0;
 template<typename Func_t, typename... Args>
 void
 TaskManagerSecondary<Func_t, Args...>
-::preregister_task(LHL::TaskID new_taskid)
+::preregister_task(Legion::TaskID new_taskid)
 {
   taskid = ((new_taskid == AUTO_GENERATE_ID) ?
-  	      LHL::Runtime::generate_static_task_id() :
+  	      Legion::Runtime::generate_static_task_id() :
 	      new_taskid);
   std::cout << "Registering task: " << Func_t::name << std::endl;
-  LHL::TaskVariantRegistrar tvr(taskid, Func_t::name);
-  tvr.add_constraint(LHL::ProcessorConstraint(LHL::Processor::LOC_PROC));
+  Legion::TaskVariantRegistrar tvr(taskid, Func_t::name);
+  tvr.add_constraint(Legion::ProcessorConstraint(Legion::Processor::LOC_PROC));
   tvr.set_leaf(true);
-  LHL::Runtime::preregister_task_variant<&TaskManagerSecondary<Func_t,Args...>::cpu_task>(tvr, Func_t::name);
+  Legion::Runtime::preregister_task_variant<&TaskManagerSecondary<Func_t,Args...>::cpu_task>(tvr, Func_t::name);
 }
 
 
 template<typename Func_t, typename... Args>
-LHL::Future
+Legion::Future
 TaskManagerSecondary<Func_t,Args...>
-::compute(LHL::Context ctx, LHL::Runtime *runtime, const Legion::TaskLauncher& launcher,
+::compute(Legion::Context ctx, Legion::Runtime *runtime, const Legion::TaskLauncher& launcher,
           const Func_t& func)
 {
   return runtime->execute_task(ctx, launcher);
@@ -141,9 +141,9 @@ std::tuple<Args...> accessorsToValues(Accessor_iter_t a, int i)
 template<typename Func_t, typename... Args>
 void
 TaskManagerSecondary<Func_t,Args...>
-::cpu_task(const LHL::Task *task,
-	   const std::vector<LHL::PhysicalRegion> &regions,
-	   LHL::Context ctx, LHL::Runtime *runtime)
+::cpu_task(const Legion::Task *task,
+	   const std::vector<Legion::PhysicalRegion> &regions,
+	   Legion::Context ctx, Legion::Runtime *runtime)
 {
   std::cout << "Executing secondary task...";
   assert(regions.size() == 2);
@@ -175,7 +175,7 @@ TaskManagerSecondary<Func_t,Args...>
 
 
 template<typename Func_t, typename... Args>
-LHL::TaskID TaskManagerSecondary<Func_t,Args...>::taskid = 0;
+Legion::TaskID TaskManagerSecondary<Func_t,Args...>::taskid = 0;
 
 
 
