@@ -135,6 +135,10 @@ TaskManagerSecondary<Func_t,Args...>
   const Func_t& func= *(const Func_t*)(task->args);
 
   // get a list of accessors for the argument
+  // NOTE: these will likely perform poorly and need better accessors.  Pointer magic is sufficient. See also:
+  // https://groups.google.com/forum/#!topic/legionusers/dhLmnDCiu6A
+  // and
+  // https://groups.google.com/forum/#!topic/legionusers/4kz95IKTNxw
   std::vector<Legion::FieldAccessor<READ_ONLY,double,1>> fas_in;
   std::cout << " depending upon FIDs: ";
   for (auto fid : task->regions[1].instance_fields) {
@@ -148,6 +152,7 @@ TaskManagerSecondary<Func_t,Args...>
   // iterate and invoke the function
   auto domain = runtime->get_index_space_domain(ctx, task->regions[0].region.get_index_space());
   for (Legion::PointInRectIterator<1> p(domain); p(); ++p) {
+    // note there is almost definitely a more efficient way to do this, but for now this is easy.  Pack a tuple then invoke. --etc
     auto values = accessorsToValues<std::vector<Legion::FieldAccessor<READ_ONLY,double,1>>::const_iterator, Args...>(fas_in.begin(), p);
     fa_out[*p] = Arcos::Magic::invoke<double>(func, values);
     std::cout << ", got: " << (double) fa_out[*p] << std::endl;
