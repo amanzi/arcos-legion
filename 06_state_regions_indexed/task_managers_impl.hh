@@ -137,7 +137,7 @@ TaskManagerSecondary<Func_t,Args...>
   // get a list of accessors for the argument
   std::vector<Legion::FieldAccessor<READ_ONLY,double,1>> fas_in;
   std::cout << " depending upon FIDs: ";
-  for (auto fid : task->regions[1].privilege_fields) {
+  for (auto fid : task->regions[1].instance_fields) {
     std::cout << (int) fid << " ";
     fas_in.emplace_back(Legion::FieldAccessor<READ_ONLY,double,1>(regions[1], fid));
   }

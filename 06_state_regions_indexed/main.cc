@@ -67,7 +67,7 @@ void top_level_task(const Task *task,
   Legion::TaskLauncher Tlauncher(TEST_ID, TaskArgument(NULL, 0));
   Tlauncher.add_region_requirement(
       RegionRequirement(s.logical_region, READ_ONLY, EXCLUSIVE, s.logical_region));
-  Tlauncher.add_field(0,s.field_ids["fa"]);
+  Tlauncher.add_field(0,s.field_ids.at("A"));
   runtime->execute_task(ctx, Tlauncher);
   
   std::cout << "Test passed!" << std::endl;

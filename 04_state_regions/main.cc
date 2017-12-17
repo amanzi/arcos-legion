@@ -34,7 +34,9 @@ void TestEvaluator(const Task *task,
   const Legion::FieldAccessor<READ_ONLY,double,1> fa(regions[0], fid);
 
   for (int i=0; i!=g_ncells; ++i) {
-    assert(std::abs(fa[i] - 6484.0) < 1.e-10);
+    if (std::abs((double) fa[i] - 6484.0) > 1.e-10)
+      std::cout << "fail, fid(" << fid << "), i(" << i << "): " << (double) fa[i] << std::endl;
+    assert(std::abs((double) fa[i] - 6484.0) < 1.e-10);
   }
   printf("Successful test!\n");
 }
@@ -67,7 +69,7 @@ void top_level_task(const Task *task,
   Legion::TaskLauncher Tlauncher(TEST_ID, TaskArgument(NULL, 0));
   Tlauncher.add_region_requirement(
       RegionRequirement(s.logical_region, READ_ONLY, EXCLUSIVE, s.logical_region));
-  Tlauncher.add_field(0,s.field_ids["fa"]);
+  Tlauncher.add_field(0,s.field_ids.at("A"));
   runtime->execute_task(ctx, Tlauncher);
   
   std::cout << "Test passed!" << std::endl;

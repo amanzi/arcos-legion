@@ -65,7 +65,7 @@ EvaluatorPrimary<TaskManager_t>::Update_(State& S) {
   std::cout << "Launching Primary task for " << key_ << std::endl;
   Legion::IndexLauncher launcher(TaskManager_t::taskid, S.partition, Legion::TaskArgument(&value_, sizeof(value_)), Legion::ArgumentMap());
   launcher.add_region_requirement(Legion::RegionRequirement(S.logical_partition, 0, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
-  launcher.add_field(0, S.field_ids[key_]);  
+  launcher.add_field(0, S.field_ids.at(key_));  
   S.futures[key_] = S.runtime->execute_index_space(S.ctx, launcher);
 }
 
@@ -115,10 +115,10 @@ EvaluatorSecondary<TaskManager_t,Function_t>::Update_(State& S) {
 
   Legion::IndexLauncher launcher(TaskManager_t::taskid, S.partition, Legion::TaskArgument(NULL, 0), Legion::ArgumentMap());
   launcher.add_region_requirement(Legion::RegionRequirement(S.logical_partition, 0, WRITE_DISCARD, EXCLUSIVE, S.logical_region));
-  launcher.add_field(0, S.field_ids[key_]);
+  launcher.add_field(0, S.field_ids.at(key_));
   auto rr = Legion::RegionRequirement{S.logical_partition, 0, READ_ONLY, EXCLUSIVE, S.logical_region};
   std::vector<Legion::FieldID> rr_deps;
-  for (auto dep : dependencies_) rr_deps.push_back(S.field_ids[dep]);
+  for (auto dep : dependencies_) rr_deps.push_back(S.field_ids.at(dep));
   rr.add_fields(rr_deps);
   launcher.add_region_requirement(rr);
   // for (auto dep : dependencies_) {
