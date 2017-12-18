@@ -25,6 +25,7 @@ void TestEvaluator(const Task *task,
 		  const std::vector<PhysicalRegion> &regions,
 		  Context ctx, Runtime *runtime)
 {
+  std::cout << "Checking final answer:" << std::endl;
   assert(regions.size() == 1);
   assert(task->regions.size() == 1);
   assert(task->regions[0].privilege_fields.size() == 1);
@@ -33,8 +34,10 @@ void TestEvaluator(const Task *task,
   FieldID fid = *(task->regions[0].privilege_fields.begin());
   const Legion::FieldAccessor<READ_ONLY,double,1> fa(regions[0], fid);
 
-  for (int i=0; i!=g_ncells; ++i) {
-    assert(std::abs(fa[i] - 6484.0) < 1.e-10);
+  auto domain = runtime->get_index_space_domain(ctx, task->regions[0].region.get_index_space());
+  for (Legion::PointInRectIterator<1> p(domain); p(); ++p) {
+    std::cout << "  - Checking point " << *p - *Legion::PointInRectIterator<1>(domain) << " = " << fa[*p] << " (expected 6484.0)" << std::endl;
+    assert(std::abs(fa[*p] - 6484.0) < 1.e-10);
   }
   printf("Successful test!\n");
 }
@@ -45,7 +48,7 @@ void top_level_task(const Task *task,
                     const std::vector<PhysicalRegion> &regions,
                     Context ctx, HighLevelRuntime *runtime)
 {
-  State s(ctx, runtime);
+  State s(ctx, runtime, 20); // 20 grid cells
 
   // require primaries
   s.RequireEvaluator("B");
@@ -105,5 +108,5 @@ int main(int argc, char **argv) {
   TaskManagerSecondary<FF,double>::preregister_task();
   TaskManagerSecondary<FH,double>::preregister_task();
   
-  return HighLevelRuntime::start(argc,argv);
+  return Runtime::start(argc,argv);
 }

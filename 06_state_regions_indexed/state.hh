@@ -15,20 +15,15 @@
 
 #include "legion.h"
 
-namespace LHL = LegionRuntime::HighLevel;
-
 namespace Arcos {
-
-static const int g_ncells = 20;
-static const int g_npartitions = 4;
 
 class Evaluator;
 
 struct State {
-  State(Legion::Context ctx_, Legion::Runtime *runtime_)
+  State(Legion::Context ctx_, Legion::Runtime *runtime_, int ncells)
     : ctx(ctx_),
       runtime(runtime_),
-      domain(Legion::DomainPoint(0), Legion::DomainPoint(g_ncells-1)),
+      domain(Legion::DomainPoint(0), Legion::DomainPoint(ncells-1)),
       n_fids(0)
   {}
 

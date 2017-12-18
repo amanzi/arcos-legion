@@ -13,6 +13,7 @@
 #include "evaluators.hh"
 #include "evaluator_factory.hh"
 #include "state.hh"
+#include "default_mapper.h"
 
 namespace Arcos {
 
@@ -64,7 +65,12 @@ State::Setup() {
 
   // -- form the partitioning
   // create the partitioning
-  Legion::Rect<1> color_bounds(0, g_npartitions-1);
+  int num_subregions =
+      runtime->select_tunable_value(ctx, Legion::Mapping::DefaultMapper::DEFAULT_TUNABLE_GLOBAL_CPUS,
+                                  0).get_result<size_t>();
+  printf("Partitioning data into %d sub-regions...\n", num_subregions);
+
+  Legion::Rect<1> color_bounds(0, num_subregions-1);
   partition = runtime->create_index_space(ctx, color_bounds);
   runtime->attach_name(partition, "state partition");
 
