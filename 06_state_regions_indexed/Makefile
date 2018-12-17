@@ -34,7 +34,7 @@ GEN_SRC		?= state.cc evaluator_factory.cc main.cc	# .cc files
 
 # You can modify these variables, some will be appended to by the runtime makefile
 INC_FLAGS	?=
-CC_FLAGS	?= -std=c++11 # -DLEGION_SPY
+CC_FLAGS	?= -std=c++11 -DLEGION_SPY
 NVCC_FLAGS	?=
 GASNET_FLAGS	?=
 LD_FLAGS	?=
